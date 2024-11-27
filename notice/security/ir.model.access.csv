@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_legal_notices,access_legal_notices,model_legal_notices,,1,1,1,1
+access_notice_infringer,access_notice_infringer,model_notice_infringer,,1,1,1,1

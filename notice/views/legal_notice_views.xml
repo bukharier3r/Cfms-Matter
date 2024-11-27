@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_legal_notice_form" model="ir.ui.view">
+        <field name="name">legal.notice.form</field>
+        <field name="model">legal.notices</field>
+        <field name="arch" type="xml">
+            <form string="Legal Notice">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="status"/>
+                            <field name="name"/>
+                            <field name="file_no"/>
+                            <field name="instruction_received"/>
+                            <!-- Show only upload button, hide uploaded files -->
+                            <field name="instruction_received_form" widget='many2many_binary'
+                                   options="{'no_create': True}"/>
+                            <!--                            <field name="infringer_name" widget="many2many "/>-->
+                            <!--                            <field name="address"/>-->
+                            <field name="city"/>
+                        </group>
+                        <group>
+                            <field name="contact_info"/>
+                            <field name="email"/>
+                            <field name="mobile_number"/>
+                            <field name="legal_notice" widget='many2many_binary' options="{'no_create': True}"/>
+                            <field name="remarks"/>
+                            <field name="notice_date"/>
+                            <!-- Show only upload button, hide uploaded files -->
+                            <field name="delivery" widget="many2many_binary" options="{'no_create': True}"/>
+                            <field name="delivery_report_remarks"/>
+                            <!-- Show only upload button, hide uploaded files -->
+                            <field name="deadline"/>
+                            <field name="is_reminder" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Updated Action Details Section -->
+                    <group string="Action Details" col="2">
+                        <field name="action_type"/>
+                        <group string="Criminal Action"
+                               attrs="{'invisible': [('action_type', '!=', 'criminal'), ('action_type', '!=', 'both')]}">
+                            <!-- Show only upload button, hide uploaded files -->
+                            <field name="criminal_action_file" widget='many2many_binary' options="{'no_create': True}"/>
+                            <field name="criminal_action_remarks"/>
+                            <field name="criminal_status"/>
+                        </group>
+
+                        <group string="Civil Action"
+                               attrs="{'invisible': [('action_type', '!=', 'civil'), ('action_type', '!=', 'both')]}">
+                            <!-- Show only upload button, hide uploaded files -->
+                            <field name="civil_action_file" widget='many2many_binary' options="{'no_create': True}"/>
+                            <field name="civil_action_remarks"/>
+                            <field name="civil_status"/>
+                        </group>
+                    </group>
+
+
+                    <notebook>
+                        <page string="Infringers">
+                            <field name="infringers">
+                                <tree>
+                                    <field name="as_field"/> <!-- Add AS field -->
+                                    <field name="name"/>
+                                    <field name="address"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="as_field"/>
+                                            <field name="name"/>
+                                            <field name="address"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Instructions Received">
+                            <!-- Display uploaded files here -->
+                            <field name="instruction_received_form" widget='many2many_binary'/>
+                        </page>
+                        <page string="Delivery Report">
+                            <!-- Display uploaded files here -->
+                            <field name="delivery" widget='many2many_binary'/>
+                        </page>
+                        <page string="Legal Notice">
+                            <!-- Display uploaded files here -->
+                            <field name="legal_notice" widget='many2many_binary'/>
+                        </page>
+                        <page string="Criminal Actions">
+                            <!-- Display uploaded files here -->
+                            <field name="criminal_action_file" widget='many2many_binary'/>
+                        </page>
+                        <page string="Civil Actions">
+                            <!-- Display uploaded files here -->
+                            <field name="civil_action_file" widget='many2many_binary'/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for Legal Notices -->
+    <record id="view_legal_notice_tree" model="ir.ui.view">
+        <field name="name">legal.notice.tree</field>
+        <field name="model">legal.notices</field>
+        <field name="arch" type="xml">
+            <tree string="Legal Notices" decoration-danger="is_reminder"
+                  default_order="is_reminder desc, deadline desc">
+                <!-- Hide is_reminder field from view but apply decoration -->
+                <field name="is_reminder" invisible="1"/> <!-- Invisible field -->
+                <field name="status"/>
+                <field name="name"/>
+                <field name="file_no"/>
+                <field name="instruction_received"/>
+                <field name="infringer_name"/>
+                <field name="address"/>
+                <field name="city"/>
+                <field name="contact_info"/>
+                <field name="email"/>
+                <field name="mobile_number"/>
+                <field name="legal_notice"/>
+                <field name="remarks"/>
+                <field name="deadline"/>
+                <field name="delivery"/>
+                <field name="delivery_report_remarks"/>
+                <field name="notice_date"/>
+                <field name="action_type"/>
+                <field name="criminal_action_file"/>
+                <field name="criminal_action_remarks"/>
+                <field name="criminal_status"/>
+                <field name="civil_action_file"/>
+                <field name="civil_action_remarks"/>
+                <field name="civil_status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View for Legal Notices -->
+    <record id="view_legal_notice_search" model="ir.ui.view">
+        <field name="name">legal.notice.search</field>
+        <field name="model">legal.notices</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="reminder" string="Reminders" domain="[('is_reminder', '=', True)]"/>
+                <filter name="all_records" string="All Records" domain="[]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Group -->
+    <record id="group_legal_notice_user" model="res.groups">
+        <field name="name">Legal Notice User</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <!-- Security Rule -->
+    <record id="rule_legal_notice_user" model="ir.rule">
+        <field name="name">Legal Notice User Rule</field>
+        <field name="model_id" ref="base.model_res_users"/> <!-- Replace with an existing model for testing -->
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_legal_notice_user'))]"/>
+    </record>
+
+    <!-- Action for Legal Notices (without order) -->
+    <record id="action_legal_notice" model="ir.actions.act_window">
+        <field name="name">Legal Notices</field>
+        <field name="res_model">legal.notices</field>
+        <field name="domain">[]</field>  <!-- No domain filter to include both reminders and non-reminders -->
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_legal_notice_tree"/>
+        <field name="search_view_id" ref="view_legal_notice_search"/>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_legal_root" name="Legal Notices" action="action_legal_notice"
+              web_icon="legal_notice,static/description/icon.png"
+              sequence="10"/>
+    <menuitem id="menu_legal_notice" name="Legal Notices" parent="base.menu_custom"/>
+</odoo>
