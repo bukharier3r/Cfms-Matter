@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_legal_notice_infringer_tree" model="ir.ui.view">
+        <field name="name">legal.notice.infringer.tree</field>
+        <field name="model">notice.infringer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="as_field"/> <!-- Add AS field -->
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_legal_notice_infringer_form" model="ir.ui.view">
+        <field name="name">legal.notice.infringer.form</field>
+        <field name="model">notice.infringer</field>
+        <field name="arch" type="xml">
+            <form string="Legal Notice Infringer">
+                <sheet>
+                    <group>
+                        <field name="as_field"/> <!-- Add AS field -->
+                        <field name="name"/>
+                        <field name="address"/>
+                        <!--                    <field name="contact_info"/>-->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_legal_notice_infringer" model="ir.actions.act_window">
+        <field name="name">Infringers</field>
+        <field name="res_model">notice.infringer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage infringers associated with legal notices.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_legal_notice_infringer" name="Infringers" parent="menu_legal_root"
+              action="action_legal_notice_infringer" sequence="2"/>
+</odoo>
