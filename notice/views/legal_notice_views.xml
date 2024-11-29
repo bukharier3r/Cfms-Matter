@@ -102,15 +102,14 @@
         </field>
     </record>
 
-    <!-- Tree View for Legal Notices -->
     <record id="view_legal_notice_tree" model="ir.ui.view">
         <field name="name">legal.notice.tree</field>
         <field name="model">legal.notices</field>
         <field name="arch" type="xml">
-            <tree string="Legal Notices" decoration-danger="is_reminder"
+            <tree string="Legal Notices" decoration-danger="status == 'pending' and (deadline_past or is_reminder)"
+                  decoration-success="status == 'complete'"
                   default_order="is_reminder desc, deadline desc">
-                <!-- Hide is_reminder field from view but apply decoration -->
-                <field name="is_reminder" invisible="1"/> <!-- Invisible field -->
+                <field name="is_reminder" invisible="1"/>
                 <field name="status"/>
                 <field name="name"/>
                 <field name="file_no"/>
@@ -124,6 +123,7 @@
                 <field name="legal_notice"/>
                 <field name="remarks"/>
                 <field name="deadline"/>
+                <field name="deadline_past" invisible="1"/> <!-- Invisible field -->
                 <field name="delivery"/>
                 <field name="delivery_report_remarks"/>
                 <field name="notice_date"/>
@@ -146,6 +146,7 @@
             <search>
                 <filter name="reminder" string="Reminders" domain="[('is_reminder', '=', True)]"/>
                 <filter name="all_records" string="All Records" domain="[]"/>
+                <filter name="deadline_passed" string="Passed Deadline" domain="[('deadline_past', '=', True)]"/>
             </search>
         </field>
     </record>
