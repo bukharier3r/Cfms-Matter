@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from datetime import timedelta
+from datetime import timedelta, date, datetime
 
 
 class LegalNotice(models.Model):
@@ -38,6 +38,12 @@ class LegalNotice(models.Model):
     remarks = fields.Text(string='Remarks')
     deadline = fields.Date(string="Deadline")
     is_reminder = fields.Boolean(string='Reminder', compute='_compute_is_reminder', store=True)
+    deadline_past = fields.Boolean(string="Deadline Past", compute="_compute_deadline_past", store=True)
+
+    @api.depends('deadline')
+    def _compute_deadline_past(self):
+        for record in self:
+            record.deadline_past = record.deadline and record.deadline < date.today()
 
     @api.depends('deadline')
     def _compute_is_reminder(self):
